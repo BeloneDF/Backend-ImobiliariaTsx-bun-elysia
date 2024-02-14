@@ -1,0 +1,37 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgres"
+    url      = env("DATABASE_URL")
+}
+
+model Imovel {
+    id          String   @id @default(uuid())
+    price       Float
+    title       String
+    description String
+    type        String
+    badroom     Int
+    bathroom    Int
+    area        Int
+    n_cars      Int
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    filter      String
+}
+
+model Email {
+    id           String @id @default(uuid())
+    contact_name String
+    link         String //Caso for querer vender o imovel nao tem link, apenas se entrar em contado por um imovel
+    phone        String
+}
+
+model User {
+    id       String @id @default(uuid())
+    user     String
+    password String
+    role     String
+}
