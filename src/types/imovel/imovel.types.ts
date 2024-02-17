@@ -12,6 +12,7 @@ export interface Imovel {
   createdAt: Date;
   updatedAt: Date;
   filter: string;
+  suite: number;
 }
 
 export const ImovelSchema = z.object({
@@ -26,5 +27,6 @@ export const ImovelSchema = z.object({
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
     filter: z.string().optional(),
+    suites: z.number().optional(),
   }),
 });

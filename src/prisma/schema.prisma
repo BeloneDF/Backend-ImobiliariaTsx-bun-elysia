@@ -17,6 +17,7 @@ model Imovel {
     bathroom    Int
     area        Int
     n_cars      Int
+    suite       Int
     createdAt   DateTime @default(now())
     updatedAt   DateTime @updatedAt
     filter      String
