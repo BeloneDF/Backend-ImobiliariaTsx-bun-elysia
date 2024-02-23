@@ -1,4 +1,4 @@
-import { z } from "Zod";
+import { z } from "zod";
 
 export interface Imovel {
   price: number;
@@ -15,6 +15,18 @@ export interface Imovel {
   suite: number;
   cidade: string;
 }
+
+export interface Foto {
+  id: string;
+  id_imovel: string;
+  foto: string;
+}
+
+export const FotoSchema = z.object({
+  id: z.string(),
+  id_imovel: z.string(),
+  foto: z.string(),
+});
 
 export const ImovelSchema = z.object({
   data: z.object({

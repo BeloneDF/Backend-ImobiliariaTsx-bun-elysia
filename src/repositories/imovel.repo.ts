@@ -1,7 +1,7 @@
 import { prisma } from "../db/prisma";
-import { Imovel, ImovelSchema } from "../types/imovel/imovel.types";
+import { Imovel, ImovelSchema, Foto } from "../types/imovel/imovel.types";
 
-export async function AddImovel(data: Imovel) {
+export async function AddImovel(data: Imovel, fotos: Foto[]) {
   const result = ImovelSchema.safeParse({ data });
 
   if (!result.success) {
@@ -12,21 +12,41 @@ export async function AddImovel(data: Imovel) {
     };
   } else {
     try {
-      await prisma.imovel.create({ data });
+      const createdImovel = await prisma.imovel.create({ data });
+
+      const createFotoPromises = fotos.map((foto) => {
+        return prisma.foto.create({
+          data: {
+            ...foto,
+            id_imovel: createdImovel.id,
+            Imovel: { connect: { id: createdImovel.id } },
+          },
+        });
+      });
+
+      await Promise.all(createFotoPromises);
       return {
         message: "Imóvel criado com sucesso",
         code: 200,
-        //data: data,
+        data: createdImovel,
       };
     } catch (error) {
       console.error(error);
+      return {
+        message: "Erro ao criar imóvel",
+        code: 500,
+      };
     }
   }
 }
 
 export async function FindAllImovel() {
   try {
-    const data = await prisma.imovel.findMany();
+    const data = await prisma.imovel.findMany({
+      include: {
+        fotos: true,
+      },
+    });
     return {
       code: 200,
       data: data,
@@ -38,7 +58,12 @@ export async function FindAllImovel() {
 
 export async function GetImovelById(params: string) {
   try {
-    const data = await prisma.imovel.findUnique({ where: { id: params } });
+    const data = await prisma.imovel.findUnique({
+      where: { id: params },
+      include: {
+        fotos: true,
+      },
+    });
     return {
       message:
         data === null
@@ -75,5 +100,21 @@ export async function UpdateImovel(params: string, data: Imovel) {
     };
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function DeleteAllImovel() {
+  try {
+    await prisma.imovel.deleteMany();
+    return {
+      message: "Todos os Imóveis foram deletados",
+      code: 200,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      message: error,
+      code: 500,
+    };
   }
 }
