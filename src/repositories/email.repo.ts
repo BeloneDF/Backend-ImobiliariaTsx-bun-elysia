@@ -46,6 +46,9 @@ export async function SendEmail(data: Email) {
     
       <div>
         <h2>Mensagem: ${data.user.message}</h2>
+        <h4>
+        <a href=${data.user.url}>Link do Imóvel</a> 
+        </h4>
       </div>
     
       <div class="things">

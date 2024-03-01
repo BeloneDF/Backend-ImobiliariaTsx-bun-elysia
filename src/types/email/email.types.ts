@@ -3,6 +3,7 @@ interface User {
     phone: number;
     email: string;
     message: string;
+    url: string
   }
   
   export interface Email {
